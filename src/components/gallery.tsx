@@ -58,7 +58,7 @@ export default function Gallery() {
                 sizes="(min-width: 1024px) 20vw, (min-width: 640px) 25vw, 33vw"
                 className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
-              <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950/70 to-transparent p-2 text-left text-[11px] font-semibold text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:text-xs">
+              <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-zinc-950/70 to-transparent p-2 text-left text-[11px] font-semibold text-white transition-opacity duration-300 sm:text-xs">
                 {item.name}
               </span>
             </button>
