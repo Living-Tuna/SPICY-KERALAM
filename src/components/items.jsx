@@ -36,20 +36,20 @@ export default function Items() {
 
   const copy = lang === "en"
     ? {
-        eyebrow: "From our store",
-        heading: "Our Spice Box",
-        desc: "Fresh, aromatic and 100% pure spices — no chemicals, no artificials. Straight from the plants to our store.",
-        boxLabel: "Spice Box",
+        eyebrow: "From our store in Alappuzha",
+        heading: "Our Spicy Box — Organic Spices & Millets",
+        desc: "Fresh, aromatic and 100% organic spices, millets, dry fruits and more from Alappuzha (Alleppey), Kerala — no chemicals, no artificials, no pesticides. Shipped fresh all over India.",
+        boxLabel: "Spicy Box",
         order: "Order now",
         whatsapp: "WhatsApp",
         email: "Email",
         call: "Call",
       }
     : {
-        eyebrow: "ഞങ്ങളുടെ സ്റ്റോറിൽ നിന്ന്",
-        heading: "ഞങ്ങളുടെ സ്പൈസ് ബോക്സ്",
-        desc: "പുതിയതും സുഗന്ധമുള്ളതും 100% ശുദ്ധവുമായ സുഗന്ധവ്യഞ്ജനങ്ങൾ — രാസവസ്തുക്കളില്ല, കൃത്രിമങ്ങളില്ല. ചെടിയിൽ നിന്ന് നേരിട്ട് ഞങ്ങളുടെ സ്റ്റോറിലേക്ക്.",
-        boxLabel: "സ്പൈസ് ബോക്സ്",
+        eyebrow: "ഞങ്ങളുടെ ആലപ്പുഴ സ്റ്റോറിൽ നിന്ന്",
+        heading: "ഞങ്ങളുടെ സ്പൈസി ബോക്സ് — ഓർഗാനിക് സുഗന്ധവ്യഞ്ജനങ്ങളും മില്ലറ്റുകളും",
+        desc: "ആലപ്പുഴയിൽ നിന്നുള്ള പുതിയതും സുഗന്ധമുള്ളതും 100% ഓർഗാനിക് സുഗന്ധവ്യഞ്ജനങ്ങളും മില്ലറ്റുകളും ഡ്രൈ ഫ്രൂട്ട്സും — രാസവസ്തുക്കളില്ല. ഇന്ത്യയിലെങ്ങും പുതുതായി എത്തിക്കുന്നു.",
+        boxLabel: "സ്പൈസി ബോക്സ്",
         order: "ഓർഡർ ചെയ്യൂ",
         whatsapp: "വാട്സ്ആപ്പ്",
         email: "ഇമെയിൽ",
@@ -131,7 +131,7 @@ export default function Items() {
               >
                 <Image
                   src={item.image}
-                  alt={item.name}
+                  alt={`${item.name} — ${item.highlight}, 100% organic spice from Spicy Keralam, Alappuzha, Kerala`}
                   width={item.width}
                   height={item.height}
                   className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"

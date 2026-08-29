@@ -3,14 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Lenis from "lenis";
-import { BRAND as BRAND_EN, REVIEWS as REVIEWS_EN, CONTACT } from "@/constants";
-import { BRAND as BRAND_ML, REVIEWS as REVIEWS_ML } from "@/constants-ml";
+import { BRAND as BRAND_EN, CONTACT } from "@/constants";
+import { BRAND as BRAND_ML } from "@/constants-ml";
 import { useLang } from "@/components/lang-provider";
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
-
-const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
 const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6" aria-hidden>
@@ -30,91 +28,139 @@ const PhoneIcon = () => (
   </svg>
 );
 
+const CONTENT = {
+  en: {
+    start: {
+      heading: "Organic Premium Spices to your Doorstep",
+      sub: "Fresh · 100% organic · delivered all over India",
+      desc: "No artificials, no pesticides — just pure, fresh Kerala spices and millets posted straight to your home, anywhere in India.",
+    },
+    end: {
+      heading: "We Ship More Than Spices",
+      sub: "Millets · dry fruits · honey · healthy essentials",
+      desc: "Beyond spices, we deliver our full range — organic millets, dry fruits, honey and more — fresh across every corner of India.",
+    },
+  },
+  ml: {
+    start: {
+      heading: "ഓർഗാനിക് പ്രീമിയം സുഗന്ധവ്യഞ്ജനങ്ങൾ, നിങ്ങളുടെ വാതിൽപ്പടിയിൽ",
+      sub: "പുതിയത് · 100% ഓർഗാനിക് · ഇന്ത്യയിലെങ്ങും ഡെലിവറി",
+      desc: "കൃത്രിമമില്ല, കീടനാശിനിയില്ല — കേരളത്തിലെ ശുദ്ധവും പുതിയതുമായ സുഗന്ധവ്യഞ്ജനങ്ങളും മില്ലറ്റുകളും ഇന്ത്യയിലെവിടെയും നേരിട്ട് വീട്ടിലേക്ക്.",
+    },
+    end: {
+      heading: "സുഗന്ധവ്യഞ്ജനങ്ങൾ മാത്രമല്ല ഞങ്ങൾ എത്തിക്കുന്നത്",
+      sub: "മില്ലറ്റ് · ഡ്രൈ ഫ്രൂട്ട്സ് · തേൻ · ആരോഗ്യ ആവശ്യങ്ങൾ",
+      desc: "സുഗന്ധവ്യഞ്ജനങ്ങൾക്കപ്പുറം, ഞങ്ങളുടെ മുഴുവൻ ശ്രേണിയും — ഓർഗാനിക് മില്ലറ്റ്, ഡ്രൈ ഫ്രൂട്ട്സ്, തേൻ എന്നിവയും ഇന്ത്യയിലെ എല്ലാ കോണുകളിലേക്കും പുതുതായി എത്തിക്കുന്നു.",
+    },
+  },
+} as const;
+
 export default function Hero() {
-  const pinRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const barRef = useRef<HTMLDivElement | null>(null);
-  const headingRef = useRef<HTMLDivElement | null>(null);
-  const bodyRef = useRef<HTMLDivElement | null>(null);
-  const scrollHintRef = useRef<HTMLDivElement | null>(null);
-  const idxRef = useRef(0);
-  const dataRef = useRef(REVIEWS_EN);
-  const videoTimeRef = useRef(0);
+  const headingARef = useRef<HTMLDivElement | null>(null);
+  const headingBRef = useRef<HTMLDivElement | null>(null);
+  const descARef = useRef<HTMLDivElement | null>(null);
+  const descBRef = useRef<HTMLDivElement | null>(null);
+  const hintRef = useRef<HTMLDivElement | null>(null);
+  const fillRef = useRef<HTMLDivElement | null>(null);
+
+  const playRef = useRef({
+    started: false,
+    finished: false,
+    progress: 0,
+    lastTime: 0,
+  });
+  const directionRef = useRef<1 | -1>(1);
+  const rafIdRef = useRef(0);
+  const touchYRef = useRef<number | null>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+  const autoPlayRef = useRef<() => void>(() => {});
+
   const { lang, setLang } = useLang();
-  const [index, setIndex] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const [loaderGone, setLoaderGone] = useState(false);
 
   const markVideoReady = () => {
     setVideoReady(true);
-    window.setTimeout(() => setLoaderGone(true), 600);
   };
-
-  const kickVideo = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    try {
-      const p = video.play() as Promise<void> | undefined;
-      if (p && typeof p.then === "function") {
-        p.then(() => {
-          try {
-            video.pause();
-          } catch {
-            /* noop */
-          }
-        }).catch(() => {
-          /* noop */
-        });
-      }
-    } catch {
-      /* noop */
-    }
-  }, []);
-
-  useEffect(() => {
-    kickVideo();
-    const kick = () => {
-      kickVideo();
-      window.removeEventListener("touchstart", kick);
-      window.removeEventListener("scroll", kick);
-      window.removeEventListener("pointerdown", kick);
-    };
-    window.addEventListener("touchstart", kick);
-    window.addEventListener("scroll", kick);
-    window.addEventListener("pointerdown", kick);
-    return () => {
-      window.removeEventListener("touchstart", kick);
-      window.removeEventListener("scroll", kick);
-      window.removeEventListener("pointerdown", kick);
-    };
-  }, [kickVideo]);
 
   useEffect(() => {
     const fallback = window.setTimeout(markVideoReady, 2000);
     return () => window.clearTimeout(fallback);
   }, []);
 
-  const localeStore = lang === "en"
-    ? { reviews: REVIEWS_EN, brand: BRAND_EN }
-    : { reviews: REVIEWS_ML, brand: BRAND_ML };
+  useEffect(() => {
+    if (!loaderGone && videoReady) {
+      const t = window.setTimeout(() => setLoaderGone(true), 600);
+      return () => window.clearTimeout(t);
+    }
+  }, [videoReady, loaderGone]);
 
-  const switchLang = (next: "en" | "ml") => {
-    if (next === lang) return;
-    dataRef.current = next === "en" ? REVIEWS_EN : REVIEWS_ML;
-    idxRef.current = 0;
-    setLang(next);
-    setIndex(0);
-    setContactOpen(false);
-    if (headingRef.current) {
-      headingRef.current.style.transform = "";
-      headingRef.current.style.opacity = "";
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = true;
+    const p = v.play() as Promise<void> | undefined;
+    if (p && typeof p.then === "function") {
+      p.then(() => {
+        try {
+          v.pause();
+          v.currentTime = 0;
+        } catch {
+          /* noop */
+        }
+      }).catch(() => {
+        /* noop */
+      });
+    } else {
+      try {
+        v.currentTime = 0;
+      } catch {
+        /* noop */
+      }
     }
-    if (bodyRef.current) {
-      bodyRef.current.style.transform = "";
-      bodyRef.current.style.opacity = "";
+  }, []);
+
+  const applyProgress = useCallback((next: number) => {
+    const video = videoRef.current;
+    const headingA = headingARef.current;
+    const headingB = headingBRef.current;
+    const descA = descARef.current;
+    const descB = descBRef.current;
+    const hint = hintRef.current;
+    const fill = fillRef.current;
+
+    if (video && Number.isFinite(video.duration)) {
+      video.currentTime = video.duration * next;
     }
-  };
+
+    const t = clamp((next - 0.45) / 0.1, 0, 1);
+
+    if (headingA) {
+      headingA.style.opacity = String(1 - t);
+      headingA.style.transform = `translateY(${-30 * t}vmin)`;
+    }
+    if (headingB) {
+      headingB.style.opacity = String(t);
+      headingB.style.transform = `translateY(${30 * (1 - t)}vmin)`;
+    }
+    if (descA) {
+      descA.style.opacity = String(1 - t);
+      descA.style.transform = `translateX(${34 * t}vmin)`;
+    }
+    if (descB) {
+      descB.style.opacity = String(t);
+      descB.style.transform = `translateX(${-34 * (1 - t)}vmin)`;
+    }
+
+    if (hint) {
+      hint.style.opacity = String(clamp(1 - next * 3, 0, 1));
+    }
+    if (fill) {
+      fill.style.transform = `scaleX(${next})`;
+    }
+  }, []);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -122,89 +168,162 @@ export default function Hero() {
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
+    lenis.stop();
 
-    let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      scrub();
-      rafId = requestAnimationFrame(raf);
+    const durationOf = () => {
+      const v = videoRef.current;
+      return v && Number.isFinite(v.duration) && v.duration > 0 ? v.duration : 6;
     };
 
-    const scrub = () => {
+    const runRaf = () => {
+      const p = playRef.current;
       const video = videoRef.current;
-      const pin = pinRef.current;
-      const bar = barRef.current;
-      const heading = headingRef.current;
-      const body = bodyRef.current;
-
-      if (!video || !pin) return;
-
-      const ready = video.readyState >= 1 && Number.isFinite(video.duration);
-      const total = pin.offsetHeight - window.innerHeight;
-      const rect = pin.getBoundingClientRect();
-      const progress = total > 0 ? clamp(-rect.top / total, 0, 1) : 1;
-
-      if (ready && Math.abs(video.currentTime - video.duration * progress) > 0.02) {
-        const target = video.duration * progress;
-        const smooth = easeOutCubic(clamp(Math.abs(target - videoTimeRef.current) / (video.duration * 0.1), 0, 1));
-        videoTimeRef.current += (target - videoTimeRef.current) * (0.2 + 0.6 * smooth);
-        video.currentTime = videoTimeRef.current;
-      } else if (ready) {
-        videoTimeRef.current = video.currentTime;
+      const duration = durationOf();
+      let progress = video ? video.currentTime / duration : p.progress;
+      if (p.finished) {
+        progress = 1;
       }
+      progress = clamp(progress, 0, 1);
+      p.progress = progress;
+      applyProgress(progress);
 
-      const count = dataRef.current.length;
-      const raw = progress * count;
-      const idx = clamp(Math.floor(raw), 0, count - 1);
-      const intra = clamp(raw - idx, 0, 1);
-
-      if (idx !== idxRef.current) {
-        idxRef.current = idx;
-        setIndex(idx);
+      if (video && !p.finished) {
+        if (video.paused && video.currentTime >= duration - 0.05) {
+          p.finished = true;
+          p.started = false;
+          video.pause();
+          video.currentTime = duration;
+          lenis.start();
+          cancelAnimationFrame(rafIdRef.current);
+          return;
+        }
       }
+      rafIdRef.current = requestAnimationFrame(runRaf);
+    };
 
-      const ease = easeOutCubic(clamp(intra * 3.5, 0, 1));
-      const t = raw < 0.4 ? 1 : ease;
-      const fromLeft = idx % 2 === 0;
-      const offset = (1 - t) * 46;
-
-      if (heading) {
-        heading.style.transform = `translateY(${offset}vmin)`;
-        heading.style.opacity = String(t);
-      }
-
-      if (body) {
-        body.style.transform = `translateX(${fromLeft ? offset : -offset}vmin)`;
-        body.style.opacity = String(t);
-      }
-
-      if (bar) {
-        const segments = Array.from(bar.children);
-        segments.forEach((segment, i) => {
-          const fill = segment.firstElementChild as HTMLElement | null;
-          const s = i < idx ? 1 : i === idx ? intra : 0;
-          if (fill) {
-            fill.style.transform = `scaleX(${s})`;
-          }
-          (segment as HTMLElement).style.opacity = i <= idx ? "1" : "0.35";
-        });
-      }
-
-      if (scrollHintRef.current) {
-        scrollHintRef.current.style.opacity = String(clamp(1 - progress * 2.5, 0, 1));
+    const playNow = () => {
+      const video = videoRef.current;
+      if (!video) return;
+      try {
+        const pr = video.play() as Promise<void> | undefined;
+        if (pr && typeof pr.then === "function") {
+          pr.catch(() => {
+            /* noop */
+          });
+        }
+      } catch {
+        /* noop */
       }
     };
 
-    rafId = requestAnimationFrame(raf);
+    const beginPlay = () => {
+      const p = playRef.current;
+      const video = videoRef.current;
+      if (p.finished) {
+        p.finished = false;
+        p.started = false;
+        if (video) {
+          try {
+            video.currentTime = 0;
+          } catch {
+            /* noop */
+          }
+        }
+        applyProgress(0);
+      }
+      if (p.started) {
+        playNow();
+        return;
+      }
+      if (video) {
+        try {
+          video.currentTime = p.progress * durationOf();
+        } catch {
+          /* noop */
+        }
+      }
+      p.started = true;
+      p.lastTime = performance.now();
+      playNow();
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = requestAnimationFrame(runRaf);
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      const p = playRef.current;
+      if (!p.finished) {
+        e.preventDefault();
+        const dir = e.deltaY >= 0 ? 1 : -1;
+        directionRef.current = dir;
+        if (dir === 1) {
+          beginPlay();
+        } else {
+          const video = videoRef.current;
+          if (video) {
+            try {
+              video.currentTime = Math.max(0, video.currentTime - 0.25);
+            } catch {
+              /* noop */
+            }
+          }
+        }
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchYRef.current = e.touches[0]?.clientY ?? null;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const p = playRef.current;
+      if (p.finished) return;
+      const y = e.touches[0]?.clientY;
+      if (y == null || touchYRef.current == null) return;
+      const delta = touchYRef.current - y;
+      touchYRef.current = y;
+      if (delta === 0) return;
+      e.preventDefault();
+      const dir = delta >= 0 ? 1 : -1;
+      directionRef.current = dir;
+      if (dir === 1) {
+        beginPlay();
+      } else {
+        const video = videoRef.current;
+        if (video) {
+          try {
+            video.currentTime = Math.max(0, video.currentTime - 0.25);
+          } catch {
+            /* noop */
+          }
+        }
+      }
+    };
+
+    const startAutoplay = () => {
+      beginPlay();
+    };
+
+    autoPlayRef.current = startAutoplay;
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+
+    const startTimer = window.setTimeout(startAutoplay, 1200);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      window.clearTimeout(startTimer);
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      cancelAnimationFrame(rafIdRef.current);
       lenis.destroy();
     };
-  }, []);
+  }, [applyProgress]);
 
-  const chapter = localeStore.reviews[index];
-  const brand = localeStore.brand;
+  const content = CONTENT[lang as "en" | "ml"];
+  const brand = lang === "en" ? BRAND_EN : BRAND_ML;
 
   const contactOptions = [
     {
@@ -230,8 +349,27 @@ export default function Hero() {
     },
   ];
 
+  const switchLang = (next: "en" | "ml") => {
+    if (next === lang) return;
+    const p = playRef.current;
+    cancelAnimationFrame(rafIdRef.current);
+    p.started = false;
+    p.finished = false;
+    p.progress = 0;
+    directionRef.current = 1;
+    lenisRef.current?.stop();
+    if (videoRef.current && Number.isFinite(videoRef.current.duration)) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    applyProgress(0);
+    setLang(next);
+    setContactOpen(false);
+    window.setTimeout(() => autoPlayRef.current(), 400);
+  };
+
   return (
-    <section ref={pinRef} className="relative h-[360vh] bg-white">
+    <>
       {!loaderGone && (
         <div
           className={`fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-white transition-opacity duration-700 sm:gap-5 ${
@@ -254,8 +392,9 @@ export default function Hero() {
           </div>
         </div>
       )}
-      <div
-        className={`sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-white transition-opacity duration-700 ${
+
+      <section
+        className={`relative flex h-screen w-full flex-col overflow-hidden bg-white transition-opacity duration-700 ${
           loaderGone ? "opacity-100" : "opacity-0"
         }`}
       >
@@ -299,27 +438,8 @@ export default function Hero() {
           </div>
         </header>
 
-        <div
-          ref={scrollHintRef}
-          className="pointer-events-none absolute right-4 top-3 z-50 flex flex-col items-center gap-1 sm:right-6 sm:top-4"
-          aria-hidden
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="h-5 w-5 text-zinc-500 animate-scroll-hint sm:h-6 sm:w-6"
-          >
-            <path d="M12 4v12" />
-            <path d="M6 12l6 6 6-6" />
-          </svg>
-        </div>
-
-        <div className="relative z-30 pt-2 text-center sm:pt-3">
-          <h1 className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
+        <div className="relative z-30 pt-1 text-center sm:pt-2">
+          <h1 className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-3xl font-extrabold tracking-tight text-transparent sm:text-5xl">
             {brand.heading}
           </h1>
           <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.5em] text-zinc-500 sm:mt-2 sm:text-xs">
@@ -328,29 +448,25 @@ export default function Hero() {
         </div>
 
         <div className="relative z-30 flex-1">
-          <div className="pointer-events-none absolute inset-x-0 top-[9%] z-10 flex justify-center px-4 text-center sm:top-[11%]">
-            <div key={`h-${lang}`} ref={headingRef} className="max-w-3xl">
-              <h2
-                className={`font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight ${
-                  lang === "ml"
-                    ? "text-2xl leading-snug sm:text-4xl"
-                    : "text-4xl sm:text-6xl"
-                } ${
-                  index % 2 === 0
-                    ? "text-emerald-600"
-                    : "text-orange-700"
-                }`}
-              >
-                {chapter.heading}
+          <div className="pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-center px-4 text-center sm:top-[9%]">
+            <div ref={headingARef} className="max-w-3xl">
+              <h2 className="font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight text-emerald-600 text-3xl sm:text-5xl lg:text-6xl">
+                {content.start.heading}
               </h2>
-              <p
-                className={`mt-2 font-mono font-bold uppercase tracking-[0.2em] text-zinc-600 sm:mt-3 ${
-                  lang === "ml"
-                    ? "text-[11px] sm:text-sm"
-                    : "text-sm sm:text-base"
-                }`}
-              >
-                {chapter.sub}
+              <p className="mt-2 font-mono font-bold uppercase tracking-[0.2em] text-zinc-600 sm:mt-3 text-xs sm:text-base">
+                {content.start.sub}
+              </p>
+            </div>
+            <div
+              ref={headingBRef}
+              className="max-w-3xl opacity-0"
+              style={{ transform: "translateY(30vmin)" }}
+            >
+              <h2 className="font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight text-orange-700 text-3xl sm:text-5xl lg:text-6xl">
+                {content.end.heading}
+              </h2>
+              <p className="mt-2 font-mono font-bold uppercase tracking-[0.2em] text-zinc-600 sm:mt-3 text-xs sm:text-base">
+                {content.end.sub}
               </p>
             </div>
           </div>
@@ -372,38 +488,21 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-6 text-center sm:pb-7">
+          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-5 text-center sm:pb-6">
             <div className="flex w-full max-w-2xl flex-col items-center justify-end gap-3 sm:gap-4">
-              <div
-                key={`b-${lang}`}
-                ref={bodyRef}
-                className="flex w-full flex-col items-center gap-3 sm:gap-4"
-              >
-                <p
-                  className={`max-w-2xl font-bold leading-relaxed text-zinc-700 ${
-                    lang === "ml"
-                      ? "text-sm sm:text-base"
-                      : "text-base sm:text-lg"
-                  }`}
-                >
-                  {chapter.desc}
+              <div ref={descARef} className="max-w-2xl">
+                <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
+                  {content.start.desc}
                 </p>
-                {chapter.hashtags && (
-                  <div className="flex flex-wrap items-center justify-center gap-2">
-                    {chapter.hashtags.map((tag, i) => (
-                      <span
-                        key={tag}
-                        className={`rounded-full border px-3 py-1 text-xs font-bold sm:text-sm ${
-                          i % 2 === 0
-                            ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-600"
-                            : "border-orange-700/40 bg-orange-700/10 text-orange-700"
-                        }`}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              </div>
+              <div
+                ref={descBRef}
+                className="max-w-2xl opacity-0"
+                style={{ transform: "translateX(-34vmin)" }}
+              >
+                <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
+                  {content.end.desc}
+                </p>
               </div>
 
               <div className="flex flex-col items-center gap-4">
@@ -412,7 +511,7 @@ export default function Hero() {
                   onClick={() => setContactOpen((v) => !v)}
                   className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/30 transition-transform hover:scale-105"
                 >
-                  {localeStore.reviews[0].button?.label ?? "Enquire Now"}
+                  {lang === "en" ? "Enquire Now" : "അന്വേഷിക്കുക"}
                   <span
                     aria-hidden
                     className={`transition-transform ${contactOpen ? "rotate-180" : ""}`}
@@ -444,20 +543,33 @@ export default function Hero() {
           </div>
         </div>
 
-        <div
-          ref={barRef}
-          className="relative z-40 flex gap-1.5 px-4 pb-4 sm:px-6 sm:pb-5"
-        >
-          {localeStore.reviews.map((_, i) => (
-            <div
-              key={`${lang}-${i}`}
-              className="h-1.5 flex-1 overflow-hidden rounded-full bg-emerald-500/25"
-            >
-              <div className="h-full w-full origin-left scale-x-0 rounded-full bg-emerald-500" />
-            </div>
-          ))}
+        <div ref={hintRef} className="pointer-events-none absolute right-4 top-3 z-50 flex flex-col items-center gap-1 sm:right-6 sm:top-4" aria-hidden>
+          <span className="font-mono text-[9px] uppercase tracking-[0.25em] text-zinc-400 sm:text-[10px]">
+            Scroll to play
+          </span>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-4 w-4 animate-scroll-hint text-zinc-500 sm:h-5 sm:w-5"
+          >
+            <path d="M12 4v12" />
+            <path d="M6 12l6 6 6-6" />
+          </svg>
         </div>
-      </div>
-    </section>
+
+        <div className="relative z-40 px-4 pb-4 sm:px-6 sm:pb-5">
+          <div className="mx-auto h-1.5 w-full max-w-2xl overflow-hidden rounded-full bg-emerald-500/25">
+            <div
+              ref={fillRef}
+              className="h-full w-full origin-left scale-x-0 rounded-full bg-emerald-500"
+            />
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

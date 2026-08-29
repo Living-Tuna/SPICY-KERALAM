@@ -49,23 +49,23 @@ export default function Testimonials() {
           eyebrow: "Reviews",
           heading: "What customers say",
           intro:
-            "Real reviews from real shoppers in Alappuzha — fresh spices, honest prices, and a store run with heart.",
+            "Real reviews from real shoppers in Alappuzha (Alleppey), Kerala — fresh, 100% organic spices, honest prices, and a store run with heart.",
           google: "Alappuzha · Google review",
           find: "Find us",
           directions: "Get Directions",
           call: "Call Now",
-          note: "Drop by for the freshest spices, millets and dry fruits in town — open through the day.",
+          note: "Visit us in Alappuzha for the freshest spices, millets and dry fruits — or order online for home delivery all over India.",
         }
       : {
           eyebrow: "അഭിപ്രായങ്ങൾ",
           heading: "ഉപഭോക്താക്കൾ പറയുന്നത്",
           intro:
-            "ആലപ്പുഴയിലെ യഥാർത്ഥ വാങ്ങലുകാരുടെ യഥാർത്ഥ അഭിപ്രായങ്ങൾ — പുതിയ സുഗന്ധവ്യഞ്ജനങ്ങൾ, നീതിയായ വില, ഹൃദയത്തോടെ നടത്തുന്ന സ്റ്റോർ.",
+            "ആലപ്പുഴയിലെ യഥാർത്ഥ വാങ്ങലുകാരുടെ യഥാർത്ഥ അഭിപ്രായങ്ങൾ — പുതിയതും 100% ഓർഗാനിക് സുഗന്ധവ്യഞ്ജനങ്ങൾ, നീതിയായ വില, ഹൃദയത്തോടെ നടത്തുന്ന സ്റ്റോർ.",
           google: "ആലപ്പുഴ · ഗൂഗിൾ അവലോകനം",
           find: "ഞങ്ങളെ കണ്ടെത്തൂ",
           directions: "ദിശ കാണുക",
           call: "ഇപ്പോൾ വിളിക്കൂ",
-          note: "നഗരത്തിലെ ഏറ്റവും പുതിയ സുഗന്ധവ്യഞ്ജനങ്ങൾ, മില്ലറ്റ്, ഡ്രൈ ഫ്രൂട്ട്സ് — ദിവസം മുഴുവൻ തുറന്നിരിക്കുന്നു.",
+          note: "നഗരത്തിലെ ഏറ്റവും പുതിയ സുഗന്ധവ്യഞ്ജനങ്ങൾ, മില്ലറ്റ്, ഡ്രൈ ഫ്രൂട്ട്സ് — അല്ലെങ്കിൽ ഓൺലൈനായി ഇന്ത്യയിലെങ്ങും ഡെലിവറി ചെയ്യുന്നു.",
         };
 
   return (

@@ -14,7 +14,7 @@ export default function Footer() {
     lang === "en"
       ? {
           tagline:
-            "100% pure spices and millets — no chemicals, no artificials. Straight from the plants to your kitchen.",
+            "Spicy Keralam in Alappuzha, Kerala is your source for 100% organic spices and millets — no chemicals, no artificials, no pesticides. Straight from the plants to your kitchen, delivered all over India.",
           visit: "Visit us",
           touch: "Get in touch",
           whatsapp: "WhatsApp",
@@ -24,7 +24,7 @@ export default function Footer() {
         }
       : {
           tagline:
-            "100% ശുദ്ധമായ സുഗന്ധവ്യഞ്ജനങ്ങളും മില്ലറ്റുകളും — രാസവസ്തുക്കളില്ല, കൃത്രിമങ്ങളില്ല. ചെടികളിൽ നിന്ന് നേരിട്ട് നിങ്ങളുടെ അടുക്കളയിലേക്ക്.",
+            "ആലപ്പുഴയിലെ സ്പൈസി കേരളം 100% ഓർഗാനിക് സുഗന്ധവ്യഞ്ജനങ്ങളുടെയും മില്ലറ്റുകളുടെയും ഉറവിടമാണ് — രാസവസ്തുക്കളില്ല, കൃത്രിമങ്ങളില്ല, കീടനാശിനികളില്ല. ചെടികളിൽ നിന്ന് നേരിട്ട് നിങ്ങളുടെ അടുക്കളയിലേക്ക്, ഇന്ത്യയിലെങ്ങും ഡെലിവറി.",
           visit: "സന്ദർശിക്കൂ",
           touch: "ബന്ധപ്പെടൂ",
           whatsapp: "വാട്സ്ആപ്പ്",
