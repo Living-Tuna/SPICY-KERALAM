@@ -6,6 +6,9 @@ import { BRAND as BRAND_EN, CONTACT } from "@/constants";
 import { BRAND as BRAND_ML } from "@/constants-ml";
 import { useLang } from "@/components/lang-provider";
 
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
 const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6" aria-hidden>
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
@@ -54,138 +57,69 @@ const CONTENT = {
 export default function Hero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fillRef = useRef<HTMLDivElement | null>(null);
-  const startTimerRef = useRef<number | null>(null);
-  const rafIdRef = useRef(0);
-  const phaseRef = useRef<"forward" | "reverse">("forward");
-  const lastTimeRef = useRef(0);
-  const playedRef = useRef(false);
 
   const { lang, setLang } = useLang();
   const [contactOpen, setContactOpen] = useState(false);
   const [played, setPlayed] = useState(false);
+  const playedRef = useRef(false);
 
   const content = CONTENT[lang as "en" | "ml"];
   const brand = lang === "en" ? BRAND_EN : BRAND_ML;
 
-  const durationOf = () => {
+  const durationOf = useCallback(() => {
     const v = videoRef.current;
     return v && Number.isFinite(v.duration) && v.duration > 0 ? v.duration : 6;
-  };
+  }, []);
 
   const setFill = useCallback((progress: number) => {
     if (fillRef.current)
-      fillRef.current.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+      fillRef.current.style.transform = `scaleX(${clamp(progress, 0, 1)})`;
   }, []);
 
-  const frameRef = useRef<(now: number) => void>(() => {});
-
-  const startPlayback = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    cancelAnimationFrame(rafIdRef.current);
-    try {
-      video.currentTime = 0;
-    } catch {
-      /* noop */
-    }
-    setFill(0);
-    phaseRef.current = "forward";
-    lastTimeRef.current = performance.now();
-    const pr = video.play() as Promise<void> | undefined;
-    if (pr && typeof pr.then === "function") {
-      pr.catch(() => {
-        /* noop */
-      });
-    }
-    cancelAnimationFrame(rafIdRef.current);
-    rafIdRef.current = requestAnimationFrame(frameRef.current);
-  }, [setFill]);
-
   useEffect(() => {
-    frameRef.current = (now: number) => {
+    const TRAVEL = 0.45;
+    let raf = 0;
+
+    const update = () => {
+      const vh = window.innerHeight;
+      const p = clamp(window.scrollY / (vh * TRAVEL), 0, 1);
       const video = videoRef.current;
       const dur = durationOf();
-      const dt = (now - lastTimeRef.current) / 1000;
-      lastTimeRef.current = now;
-
-      if (!video) {
-        rafIdRef.current = requestAnimationFrame(frameRef.current);
-        return;
-      }
-
-      if (phaseRef.current === "forward") {
-        setFill(video.currentTime / dur);
-        if (video.currentTime >= dur - 0.05 || video.ended) {
-          if (!playedRef.current) {
-            playedRef.current = true;
-            setPlayed(true);
-          }
-          phaseRef.current = "reverse";
-          try {
-            video.pause();
-          } catch {
-            /* noop */
-          }
-        }
-      } else {
-        const next = video.currentTime - dt;
-        if (next <= 0) {
-          try {
-            video.currentTime = 0;
-          } catch {
-            /* noop */
-          }
-          setFill(0);
-          phaseRef.current = "forward";
-          const pr = video.play() as Promise<void> | undefined;
-          if (pr && typeof pr.then === "function") pr.catch(() => {});
-        } else {
-          try {
-            video.currentTime = next;
-          } catch {
-            /* noop */
-          }
-          setFill(next / dur);
+      if (video) {
+        try {
+          video.currentTime = p * dur;
+        } catch {
+          /* noop */
         }
       }
-
-      rafIdRef.current = requestAnimationFrame(frameRef.current);
+      setFill(p);
+      if (p > 0.5 && !playedRef.current) {
+        playedRef.current = true;
+        setPlayed(true);
+      } else if (p <= 0.5 && playedRef.current) {
+        playedRef.current = false;
+        setPlayed(false);
+      }
     };
-  }, [setFill]);
 
-  useEffect(() => {
-    startTimerRef.current = window.setTimeout(startPlayback, 1000);
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+
     return () => {
-      if (startTimerRef.current) window.clearTimeout(startTimerRef.current);
-      cancelAnimationFrame(rafIdRef.current);
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
     };
-  }, [startPlayback]);
-
-  const handleEnded = () => {
-    playedRef.current = true;
-    if (!played) setPlayed(true);
-    setFill(1);
-  };
+  }, [durationOf, setFill]);
 
   const switchLang = (next: "en" | "ml") => {
     if (next === lang) return;
     setLang(next);
     setContactOpen(false);
-    const video = videoRef.current;
-    if (video) {
-      try {
-        video.pause();
-        video.currentTime = 0;
-      } catch {
-        /* noop */
-      }
-    }
-    setPlayed(false);
-    playedRef.current = false;
-    setFill(0);
-    phaseRef.current = "forward";
-    if (startTimerRef.current) window.clearTimeout(startTimerRef.current);
-    startTimerRef.current = window.setTimeout(startPlayback, 400);
   };
 
   const contactOptions = [
@@ -213,134 +147,135 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative flex h-screen w-full flex-col overflow-hidden bg-white">
-      <header className="relative z-40 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-4 sm:px-6 sm:pt-5">
-        <span />
-        <div className="flex justify-center">
-          <Image
-            src="/logo.png"
-            alt="Spicy Keralam logo"
-            width={1374}
-            height={1145}
-            priority
-            className="h-auto w-20 sm:w-28"
-          />
-        </div>
-        <div className="flex justify-end">
-          <div className="flex items-center overflow-hidden rounded-full border border-zinc-300 bg-white/80 text-xs font-semibold sm:text-sm">
-            <button
-              type="button"
-              onClick={() => switchLang("en")}
-              className={`px-3 py-1.5 transition-colors sm:px-4 ${
-                lang === "en"
-                  ? "bg-emerald-600 text-white"
-                  : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950"
-              }`}
-            >
-              EN
-            </button>
-            <button
-              type="button"
-              onClick={() => switchLang("ml")}
-              className={`px-3 py-1.5 transition-colors sm:px-4 ${
-                lang === "ml"
-                  ? "bg-emerald-600 text-white"
-                  : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950"
-              }`}
-            >
-              ML
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <div className="relative z-30 pt-1 text-center sm:pt-2">
-        <h1 className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-3xl font-extrabold tracking-tight text-transparent sm:text-5xl">
-          {brand.heading}
-        </h1>
-        <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.5em] text-zinc-500 sm:mt-2 sm:text-xs">
-          {brand.subtitle}
-        </p>
-      </div>
-
-      <div className="relative z-30 flex-1">
-        <div className="pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-center px-4 text-center sm:top-[9%]">
-          <div className="max-w-3xl transition-opacity duration-700">
-            <h2 className="font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight text-emerald-600 text-3xl sm:text-5xl lg:text-6xl">
-              {played ? content.end.heading : content.start.heading}
-            </h2>
-            <p className="mt-2 font-mono font-bold uppercase tracking-[0.2em] text-zinc-600 sm:mt-3 text-xs sm:text-base">
-              {played ? content.end.sub : content.start.sub}
-            </p>
-          </div>
-        </div>
-
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
-          <div className="relative aspect-[16/8.8] w-[min(92vw,880px)] overflow-hidden bg-white sm:w-[min(80vw,950px)]">
-            <video
-              ref={videoRef}
-              onEnded={handleEnded}
-              className="absolute inset-0 h-full w-full object-cover object-top"
-              src="/animation.mp4"
-              muted
-              playsInline
-              preload="auto"
+    <section className="relative h-[145vh] w-full">
+      <div className="sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-white">
+        <header className="relative z-40 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-4 sm:px-6 sm:pt-5">
+          <span />
+          <div className="flex justify-center">
+            <Image
+              src="/logo.png"
+              alt="Spicy Keralam logo"
+              width={1374}
+              height={1145}
+              priority
+              className="h-auto w-20 sm:w-28"
             />
           </div>
-        </div>
-
-        <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-5 text-center sm:pb-6">
-          <div className="flex w-full max-w-2xl flex-col items-center justify-end gap-3 sm:gap-4">
-            <div className="max-w-2xl transition-opacity duration-700">
-              <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
-                {played ? content.end.desc : content.start.desc}
-              </p>
-            </div>
-
-            <div className="flex flex-col items-center gap-4">
+          <div className="flex justify-end">
+            <div className="flex items-center overflow-hidden rounded-full border border-zinc-300 bg-white/80 text-xs font-semibold sm:text-sm">
               <button
                 type="button"
-                onClick={() => setContactOpen((v) => !v)}
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/30 transition-transform hover:scale-105"
+                onClick={() => switchLang("en")}
+                className={`px-3 py-1.5 transition-colors sm:px-4 ${
+                  lang === "en"
+                    ? "bg-emerald-600 text-white"
+                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950"
+                }`}
               >
-                {lang === "en" ? "Enquire Now" : "അന്വേഷിക്കുക"}
-                <span
-                  aria-hidden
-                  className={`transition-transform ${contactOpen ? "rotate-180" : ""}`}
-                >
-                  ▾
-                </span>
+                EN
               </button>
-              {contactOpen && (
-                <div className="flex items-center justify-center gap-5 sm:gap-7">
-                  {contactOptions.map((opt, i) => (
-                    <a
-                      key={opt.key}
-                      href={opt.href}
-                      target={opt.external ? "_blank" : undefined}
-                      rel={opt.external ? "noopener noreferrer" : undefined}
-                      style={{ animationDelay: `${i * 90}ms` }}
-                      className="contact-pop flex flex-col items-center gap-1.5 text-xs font-bold text-zinc-700 transition-colors hover:text-emerald-600 sm:text-sm"
-                    >
-                      <span className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-600">
-                        <opt.Icon />
-                      </span>
-                      {opt.label}
-                    </a>
-                  ))}
-                </div>
-              )}
+              <button
+                type="button"
+                onClick={() => switchLang("ml")}
+                className={`px-3 py-1.5 transition-colors sm:px-4 ${
+                  lang === "ml"
+                    ? "bg-emerald-600 text-white"
+                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-950"
+                }`}
+              >
+                ML
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="relative z-30 pt-1 text-center sm:pt-2">
+          <h1 className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-3xl font-extrabold tracking-tight text-transparent sm:text-5xl">
+            {brand.heading}
+          </h1>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.5em] text-zinc-500 sm:mt-2 sm:text-xs">
+            {brand.subtitle}
+          </p>
+        </div>
+
+        <div className="relative z-30 flex-1">
+          <div className="pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-center px-4 text-center sm:top-[9%]">
+            <div className="max-w-3xl transition-opacity duration-300">
+              <h2 className="font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight text-emerald-600 text-3xl sm:text-5xl lg:text-6xl">
+                {played ? content.end.heading : content.start.heading}
+              </h2>
+              <p className="mt-2 font-mono font-bold uppercase tracking-[0.2em] text-zinc-600 sm:mt-3 text-xs sm:text-base">
+                {played ? content.end.sub : content.start.sub}
+              </p>
+            </div>
+          </div>
+
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
+            <div className="relative aspect-[16/8.8] w-[min(92vw,880px)] overflow-hidden bg-white sm:w-[min(80vw,950px)]">
+              <video
+                ref={videoRef}
+                className="absolute inset-0 h-full w-full object-cover object-top"
+                src="/animation.mp4"
+                muted
+                playsInline
+                preload="auto"
+              />
+            </div>
+          </div>
+
+          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-5 text-center sm:pb-6">
+            <div className="flex w-full max-w-2xl flex-col items-center justify-end gap-3 sm:gap-4">
+              <div className="max-w-2xl transition-opacity duration-300">
+                <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
+                  {played ? content.end.desc : content.start.desc}
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setContactOpen((v) => !v)}
+                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/30 transition-transform hover:scale-105"
+                >
+                  {lang === "en" ? "Enquire Now" : "അന്വേഷിക്കുക"}
+                  <span
+                    aria-hidden
+                    className={`transition-transform ${contactOpen ? "rotate-180" : ""}`}
+                  >
+                    ▾
+                  </span>
+                </button>
+                {contactOpen && (
+                  <div className="flex items-center justify-center gap-5 sm:gap-7">
+                    {contactOptions.map((opt, i) => (
+                      <a
+                        key={opt.key}
+                        href={opt.href}
+                        target={opt.external ? "_blank" : undefined}
+                        rel={opt.external ? "noopener noreferrer" : undefined}
+                        style={{ animationDelay: `${i * 90}ms` }}
+                        className="contact-pop flex flex-col items-center gap-1.5 text-xs font-bold text-zinc-700 transition-colors hover:text-emerald-600 sm:text-sm"
+                      >
+                        <span className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-600">
+                          <opt.Icon />
+                        </span>
+                        {opt.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative z-40 px-4 pb-4 sm:px-6 sm:pb-5">
-        <div className="mx-auto h-1.5 w-full max-w-2xl overflow-hidden rounded-full bg-emerald-500/25">
-          <div
-            ref={fillRef}
-            className="h-full w-full origin-left scale-x-0 rounded-full bg-emerald-500"
-          />
+        <div className="relative z-40 px-4 pb-4 sm:px-6 sm:pb-5">
+          <div className="mx-auto h-1.5 w-full max-w-2xl overflow-hidden rounded-full bg-emerald-500/25">
+            <div
+              ref={fillRef}
+              className="h-full w-full origin-left scale-x-0 rounded-full bg-emerald-500"
+            />
+          </div>
         </div>
       </div>
     </section>
