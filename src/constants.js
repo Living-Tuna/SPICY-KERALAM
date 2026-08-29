@@ -136,50 +136,20 @@ export const TESTIMONIALS = [
 
 export const REVIEWS = [
   {
-    heading: "Introducing Our Spice Box",
-    sub: "Authentic Kerala spices, to the world",
-    desc: "100% pure — no chemicals, no artificials, no shortcuts. Straight from the plants to our store.",
-    hashtags: ["#Authentic", "#Premium", "#NoChemicals", "#100%Pure", "#PlantsToStore"],
+    heading: "Our Spicy Box",
+    sub: "100% organic · no artificials · no pesticides",
+    desc: "Fresh, authentic Kerala spices and millets — 100% organic, with no artificials and no pesticides. Straight from our plants to your store.",
+    hashtags: ["#100%Organic", "#NoArtificials", "#NoPesticides", "#PlantsToStore"],
     button: { label: "Enquire Now", href: "#contact" },
   },
   {
-    heading: "Spicy Keralam",
-    sub: "Kerala's aroma breezes through the world",
-    desc: "Fresh and authentic spices that truly capture the essence of Kerala. Premium quality, rich-natural flavour, and neatly packed and shipped — to your home.",
+    heading: "Kerala's Aroma, Everywhere",
+    sub: "From Alappuzha to your home",
+    desc: "Authentic spices that capture the true essence of Kerala — premium quality, rich natural flavour, and neatly packed for you.",
   },
   {
-    heading: "Alappuzha's Natural Treasure",
-    sub: "An organic Kerala spice market",
-    desc: "100% purity is a myth in modern markets -- Not in our store.",
-  },
-  {
-    heading: "Shipping Kerala's Aroma to the World",
-    sub: "Black pepper · cinnamon · star anise · green cardamom · cloves",
-    desc: "The aroma, freshness and overall standard is never lost. Every single item is fresh, aromatic, and of premium quality — a basket that smells like Kerala's authenticity itself.",
-  },
-  {
-    heading: "Healthy Spices to your doorstep",
-    sub: "Premium quality spices and mullets",
-    desc: "Zero-chemicals, zero-artificials, zero shortcuts. ",
-  },
-  {
-    heading: "Spices & more...",
-    sub: "Millets, dry fruits & value-added goodness",
-    desc: "Enquire about our millets and dry fruits — premium quality, and a taste that will make you want for more.",
-  },
-  {
-    heading: "A Greener Grocery",
-    sub: "Healthy grains, affordable always",
-    desc: "Good quality millets and dry fruits at very affordable prices, backed by warm customer service and a purchasing atmosphere that keeps you coming back.",
-  },
-  {
-    heading: "Premium in Town",
-    sub: "Alappuzha's spice destination",
-    desc: "Cardamom, clove, black pepper, karipetty and more — all good and fresh. A premium shop in the heart of Alappuzha town, run with heart. ❤️",
-  },
-  {
-    heading: "Come, Taste It",
-    sub: "Authentic flavours & healthy grains — a must-visit",
-    desc: "High-quality, affordable spices and value-added products, packed with freshness and care. If you're in Alappuzha looking for authentic spices, this is the place. 🌿🔥",
+    heading: "Shipping All Over India",
+    sub: "Your spicy box, delivered",
+    desc: "We ship our pure, organic spices and millets to every corner of India — freshly packed and delivered with care.",
   },
 ];

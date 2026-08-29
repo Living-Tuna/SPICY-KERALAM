@@ -57,6 +57,22 @@ body {
   animation: contact-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+@keyframes scroll-hint {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.4;
+  }
+}
+
+.animate-scroll-hint {
+  animation: scroll-hint 1.6s ease-in-out infinite;
+}
+
 @keyframes float-item {
   0%,
   100% {
@@ -86,6 +102,9 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .float-item {
+    animation: none;
+  }
+  .animate-scroll-hint {
     animation: none;
   }
 }

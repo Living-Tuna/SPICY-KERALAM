@@ -36,8 +36,10 @@ export default function Hero() {
   const barRef = useRef<HTMLDivElement | null>(null);
   const headingRef = useRef<HTMLDivElement | null>(null);
   const bodyRef = useRef<HTMLDivElement | null>(null);
+  const scrollHintRef = useRef<HTMLDivElement | null>(null);
   const idxRef = useRef(0);
   const dataRef = useRef(REVIEWS_EN);
+  const videoTimeRef = useRef(0);
   const { lang, setLang } = useLang();
   const [index, setIndex] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
@@ -143,7 +145,12 @@ export default function Hero() {
       const progress = total > 0 ? clamp(-rect.top / total, 0, 1) : 1;
 
       if (ready && Math.abs(video.currentTime - video.duration * progress) > 0.02) {
-        video.currentTime = video.duration * progress;
+        const target = video.duration * progress;
+        const smooth = easeOutCubic(clamp(Math.abs(target - videoTimeRef.current) / (video.duration * 0.1), 0, 1));
+        videoTimeRef.current += (target - videoTimeRef.current) * (0.2 + 0.6 * smooth);
+        video.currentTime = videoTimeRef.current;
+      } else if (ready) {
+        videoTimeRef.current = video.currentTime;
       }
 
       const count = dataRef.current.length;
@@ -156,13 +163,13 @@ export default function Hero() {
         setIndex(idx);
       }
 
-      const ease = easeOutCubic(clamp(intra * 2.5, 0, 1));
+      const ease = easeOutCubic(clamp(intra * 3.5, 0, 1));
       const t = raw < 0.4 ? 1 : ease;
       const fromLeft = idx % 2 === 0;
-      const offset = (1 - t) * 42;
+      const offset = (1 - t) * 46;
 
       if (heading) {
-        heading.style.transform = `translateX(${fromLeft ? -offset : offset}vmin)`;
+        heading.style.transform = `translateY(${offset}vmin)`;
         heading.style.opacity = String(t);
       }
 
@@ -181,6 +188,10 @@ export default function Hero() {
           }
           (segment as HTMLElement).style.opacity = i <= idx ? "1" : "0.35";
         });
+      }
+
+      if (scrollHintRef.current) {
+        scrollHintRef.current.style.opacity = String(clamp(1 - progress * 2.5, 0, 1));
       }
     };
 
@@ -220,7 +231,7 @@ export default function Hero() {
   ];
 
   return (
-    <section ref={pinRef} className="relative h-[600vh] bg-white">
+    <section ref={pinRef} className="relative h-[360vh] bg-white">
       {!loaderGone && (
         <div
           className={`fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-white transition-opacity duration-700 sm:gap-5 ${
@@ -287,6 +298,25 @@ export default function Hero() {
             </div>
           </div>
         </header>
+
+        <div
+          ref={scrollHintRef}
+          className="pointer-events-none absolute right-4 top-3 z-50 flex flex-col items-center gap-1 sm:right-6 sm:top-4"
+          aria-hidden
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-5 w-5 text-zinc-500 animate-scroll-hint sm:h-6 sm:w-6"
+          >
+            <path d="M12 4v12" />
+            <path d="M6 12l6 6 6-6" />
+          </svg>
+        </div>
 
         <div className="relative z-30 pt-2 text-center sm:pt-3">
           <h1 className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
