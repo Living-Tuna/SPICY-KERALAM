@@ -49,6 +49,11 @@ export default function Hero() {
     window.setTimeout(() => setLoaderGone(true), 600);
   };
 
+  useEffect(() => {
+    const fallback = window.setTimeout(markVideoReady, 8000);
+    return () => window.clearTimeout(fallback);
+  }, []);
+
   const localeStore = lang === "en"
     ? { reviews: REVIEWS_EN, brand: BRAND_EN }
     : { reviews: REVIEWS_ML, brand: BRAND_ML };
@@ -177,6 +182,28 @@ export default function Hero() {
 
   return (
     <section ref={pinRef} className="relative h-[600vh] bg-white">
+      {!loaderGone && (
+        <div
+          className={`fixed inset-0 z-[200] flex flex-col items-center justify-center gap-4 bg-white transition-opacity duration-700 sm:gap-5 ${
+            videoReady ? "pointer-events-none opacity-0" : "opacity-100"
+          }`}
+        >
+          <Image
+            src="/logo.png"
+            alt="Spicy Keralam logo"
+            width={1374}
+            height={1145}
+            priority
+            className="h-auto w-24 sm:w-32"
+          />
+          <p className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-xl font-extrabold tracking-tight text-transparent sm:text-2xl">
+            Spicy Keralam
+          </p>
+          <div className="mt-2 h-1 w-44 overflow-hidden rounded-full bg-zinc-200 sm:w-56">
+            <div className="loader-bar h-full w-1/2 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-700" />
+          </div>
+        </div>
+      )}
       <div className="sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-white">
         <header className="relative z-40 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-4 sm:px-6 sm:pt-5">
           <span />
@@ -257,31 +284,10 @@ export default function Hero() {
 
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
             <div className="relative aspect-[16/8.8] w-[min(92vw,880px)] overflow-hidden bg-white sm:w-[min(80vw,950px)]">
-              {!loaderGone && (
-                <div
-                  className={`absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white transition-opacity duration-500 sm:gap-4 ${
-                    videoReady ? "opacity-0" : "opacity-100"
-                  }`}
-                >
-                  <Image
-                    src="/logo.png"
-                    alt="Spicy Keralam"
-                    width={96}
-                    height={80}
-                    className="h-auto w-20 sm:w-24"
-                  />
-                  <p className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-base font-extrabold tracking-tight text-transparent sm:text-lg">
-                    Spicy Keralam
-                  </p>
-                  <span
-                    aria-hidden
-                    className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent sm:h-7 sm:w-7"
-                  />
-                </div>
-              )}
               <video
                 ref={videoRef}
                 onLoadedData={markVideoReady}
+                onCanPlay={markVideoReady}
                 className="absolute inset-0 h-full w-full object-cover object-top"
                 src="/animation.mp4"
                 muted
