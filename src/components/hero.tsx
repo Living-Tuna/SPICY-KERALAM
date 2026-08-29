@@ -50,7 +50,7 @@ export default function Hero() {
   };
 
   useEffect(() => {
-    const fallback = window.setTimeout(markVideoReady, 8000);
+    const fallback = window.setTimeout(markVideoReady, 2000);
     return () => window.clearTimeout(fallback);
   }, []);
 
@@ -204,7 +204,11 @@ export default function Hero() {
           </div>
         </div>
       )}
-      <div className="sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-white">
+      <div
+        className={`sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-white transition-opacity duration-700 ${
+          loaderGone ? "opacity-100" : "opacity-0"
+        }`}
+      >
         <header className="relative z-40 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-4 sm:px-6 sm:pt-5">
           <span />
           <div className="flex justify-center">
@@ -286,6 +290,7 @@ export default function Hero() {
             <div className="relative aspect-[16/8.8] w-[min(92vw,880px)] overflow-hidden bg-white sm:w-[min(80vw,950px)]">
               <video
                 ref={videoRef}
+                onLoadedMetadata={markVideoReady}
                 onLoadedData={markVideoReady}
                 onCanPlay={markVideoReady}
                 className="absolute inset-0 h-full w-full object-cover object-top"

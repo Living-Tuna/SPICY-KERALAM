@@ -5,16 +5,25 @@ import Gallery from "@/components/gallery";
 import Footer from "@/components/footer";
 import FloatingContact from "@/components/floating-contact";
 import { LangProvider } from "@/components/lang-provider";
+import LazySection from "@/components/lazy-section";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50">
       <LangProvider>
         <Hero />
-        <Items />
-        <Gallery />
-        <Testimonials />
-        <Footer />
+        <LazySection>
+          <Items />
+        </LazySection>
+        <LazySection>
+          <Gallery />
+        </LazySection>
+        <LazySection>
+          <Testimonials />
+        </LazySection>
+        <LazySection>
+          <Footer />
+        </LazySection>
       </LangProvider>
       <FloatingContact />
     </div>
