@@ -41,6 +41,13 @@ export default function Hero() {
   const { lang, setLang } = useLang();
   const [index, setIndex] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const [loaderGone, setLoaderGone] = useState(false);
+
+  const markVideoReady = () => {
+    setVideoReady(true);
+    window.setTimeout(() => setLoaderGone(true), 600);
+  };
 
   const localeStore = lang === "en"
     ? { reviews: REVIEWS_EN, brand: BRAND_EN }
@@ -250,8 +257,31 @@ export default function Hero() {
 
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
             <div className="relative aspect-[16/8.8] w-[min(92vw,880px)] overflow-hidden bg-white sm:w-[min(80vw,950px)]">
+              {!loaderGone && (
+                <div
+                  className={`absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-white transition-opacity duration-500 sm:gap-4 ${
+                    videoReady ? "opacity-0" : "opacity-100"
+                  }`}
+                >
+                  <Image
+                    src="/logo.png"
+                    alt="Spicy Keralam"
+                    width={96}
+                    height={80}
+                    className="h-auto w-20 sm:w-24"
+                  />
+                  <p className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-700 bg-clip-text font-[family-name:var(--font-brand)] text-base font-extrabold tracking-tight text-transparent sm:text-lg">
+                    Spicy Keralam
+                  </p>
+                  <span
+                    aria-hidden
+                    className="h-6 w-6 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent sm:h-7 sm:w-7"
+                  />
+                </div>
+              )}
               <video
                 ref={videoRef}
+                onLoadedData={markVideoReady}
                 className="absolute inset-0 h-full w-full object-cover object-top"
                 src="/animation.mp4"
                 muted
