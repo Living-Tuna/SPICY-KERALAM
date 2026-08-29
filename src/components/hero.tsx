@@ -55,6 +55,7 @@ const CONTENT = {
 } as const;
 
 export default function Hero() {
+  const heroRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fillRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,6 +63,7 @@ export default function Hero() {
   const [contactOpen, setContactOpen] = useState(false);
   const [played, setPlayed] = useState(false);
   const playedRef = useRef(false);
+  const primedRef = useRef(false);
 
   const content = CONTENT[lang as "en" | "ml"];
   const brand = lang === "en" ? BRAND_EN : BRAND_ML;
@@ -77,21 +79,40 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    const TRAVEL = 0.45;
+    const TRAVEL = 0.55;
+    const hero = heroRef.current;
     let raf = 0;
+    let target = -1;
+    let lastSet = -1;
+
+    const prime = () => {
+      const video = videoRef.current;
+      if (!video || primedRef.current) return;
+      primedRef.current = true;
+      try {
+        const p = video.play();
+        if (p && typeof p.then === "function") {
+          p.then(() => {
+            try {
+              video.pause();
+            } catch {
+              /* noop */
+            }
+          }).catch(() => {
+            /* autoplay blocked (desktop); scrubbing still works there */
+          });
+        }
+      } catch {
+        /* noop */
+      }
+    };
 
     const update = () => {
       const vh = window.innerHeight;
-      const p = clamp(window.scrollY / (vh * TRAVEL), 0, 1);
-      const video = videoRef.current;
-      const dur = durationOf();
-      if (video) {
-        try {
-          video.currentTime = p * dur;
-        } catch {
-          /* noop */
-        }
-      }
+      const rect = hero ? hero.getBoundingClientRect() : null;
+      const offset = rect ? -rect.top : window.scrollY;
+      const p = clamp(offset / (vh * TRAVEL), 0, 1);
+      target = p * durationOf();
       setFill(p);
       if (p > 0.5 && !playedRef.current) {
         playedRef.current = true;
@@ -102,16 +123,38 @@ export default function Hero() {
       }
     };
 
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(update);
+    const frame = () => {
+      const video = videoRef.current;
+      if (video && Math.abs(target - lastSet) > 0.0001) {
+        lastSet = target;
+        try {
+          video.currentTime = target;
+        } catch {
+          /* noop */
+        }
+      }
+      raf = requestAnimationFrame(frame);
     };
 
+    const onScroll = () => {
+      prime();
+      update();
+    };
+
+    const video = videoRef.current;
+    video?.addEventListener("loadeddata", prime, { once: true });
+    video?.addEventListener("loadedmetadata", prime, { once: true });
+
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    raf = requestAnimationFrame(frame);
     update();
 
     return () => {
+      video?.removeEventListener("loadeddata", prime);
+      video?.removeEventListener("loadedmetadata", prime);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
     };
   }, [durationOf, setFill]);
@@ -147,8 +190,10 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative h-[145vh] w-full">
-      <div className="sticky top-0 flex h-screen w-full flex-col overflow-hidden bg-white">
+    <section
+      ref={heroRef}
+      className="relative flex h-screen w-full flex-col overflow-hidden bg-white"
+    >
         <header className="relative z-40 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-4 sm:px-6 sm:pt-5">
           <span />
           <div className="flex justify-center">
@@ -277,7 +322,6 @@ export default function Hero() {
             />
           </div>
         </div>
-      </div>
     </section>
   );
 }
