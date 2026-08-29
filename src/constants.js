@@ -23,7 +23,7 @@ export const ITEMS = [
   {
     name: "Green Cardamom",
     nameML: "ഏലം",
-    image: "/images/cardamom.png",
+    image: "/images/cardamom.jpg",
     width: 1536,
     height: 1024,
     highlight: "Vibrant & aromatic",
@@ -31,7 +31,7 @@ export const ITEMS = [
   {
     name: "Clove",
     nameML: "ഗ്രാമ്പൂ",
-    image: "/images/clove.png",
+    image: "/images/clove.jpg",
     width: 1536,
     height: 1024,
     highlight: "Freshly dried",
@@ -39,7 +39,7 @@ export const ITEMS = [
   {
     name: "Nutmeg",
     nameML: "ജാതിക്ക",
-    image: "/images/nutmeg-maze.png",
+    image: "/images/nutmeg-maze.jpg",
     width: 1536,
     height: 1024,
     highlight: "Whole & fragrant",
@@ -47,7 +47,7 @@ export const ITEMS = [
   {
     name: "Black Pepper",
     nameML: "കുരുമുളക്",
-    image: "/images/pepper.png",
+    image: "/images/pepper.jpg",
     width: 1536,
     height: 1024,
     highlight: "Sun-dried & pungent",
@@ -55,7 +55,7 @@ export const ITEMS = [
   {
     name: "Star Anise",
     nameML: "തകരം",
-    image: "/images/star-annice.png",
+    image: "/images/star-annice.jpg",
     width: 1448,
     height: 1086,
     highlight: "Premium grade",
@@ -63,7 +63,7 @@ export const ITEMS = [
   {
     name: "Cinnamon Stick",
     nameML: "കറുവാപ്പട്ട",
-    image: "/images/cinnamon-stick.png",
+    image: "/images/cinnamon-stick.jpg",
     width: 1536,
     height: 1024,
     highlight: "Sweet & woody",

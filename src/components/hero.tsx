@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Lenis from "lenis";
 import { BRAND as BRAND_EN, REVIEWS as REVIEWS_EN, CONTACT } from "@/constants";
@@ -48,6 +48,45 @@ export default function Hero() {
     setVideoReady(true);
     window.setTimeout(() => setLoaderGone(true), 600);
   };
+
+  const kickVideo = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    try {
+      const p = video.play() as Promise<void> | undefined;
+      if (p && typeof p.then === "function") {
+        p.then(() => {
+          try {
+            video.pause();
+          } catch {
+            /* noop */
+          }
+        }).catch(() => {
+          /* noop */
+        });
+      }
+    } catch {
+      /* noop */
+    }
+  }, []);
+
+  useEffect(() => {
+    kickVideo();
+    const kick = () => {
+      kickVideo();
+      window.removeEventListener("touchstart", kick);
+      window.removeEventListener("scroll", kick);
+      window.removeEventListener("pointerdown", kick);
+    };
+    window.addEventListener("touchstart", kick);
+    window.addEventListener("scroll", kick);
+    window.addEventListener("pointerdown", kick);
+    return () => {
+      window.removeEventListener("touchstart", kick);
+      window.removeEventListener("scroll", kick);
+      window.removeEventListener("pointerdown", kick);
+    };
+  }, [kickVideo]);
 
   useEffect(() => {
     const fallback = window.setTimeout(markVideoReady, 2000);
@@ -293,6 +332,7 @@ export default function Hero() {
                 onLoadedMetadata={markVideoReady}
                 onLoadedData={markVideoReady}
                 onCanPlay={markVideoReady}
+                onPlaying={markVideoReady}
                 className="absolute inset-0 h-full w-full object-cover object-top"
                 src="/animation.mp4"
                 muted
