@@ -58,12 +58,10 @@ export default function Hero() {
   const heroRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const fillRef = useRef<HTMLDivElement | null>(null);
+  const primedRef = useRef(false);
 
   const { lang, setLang } = useLang();
   const [contactOpen, setContactOpen] = useState(false);
-  const [played, setPlayed] = useState(false);
-  const playedRef = useRef(false);
-  const primedRef = useRef(false);
 
   const content = CONTENT[lang as "en" | "ml"];
   const brand = lang === "en" ? BRAND_EN : BRAND_ML;
@@ -114,13 +112,6 @@ export default function Hero() {
       const p = clamp(offset / (vh * TRAVEL), 0, 1);
       target = p * durationOf();
       setFill(p);
-      if (p > 0.5 && !playedRef.current) {
-        playedRef.current = true;
-        setPlayed(true);
-      } else if (p <= 0.5 && playedRef.current) {
-        playedRef.current = false;
-        setPlayed(false);
-      }
     };
 
     const frame = () => {
@@ -199,7 +190,7 @@ export default function Hero() {
           <div className="flex justify-center">
             <Image
               src="/logo.png"
-              alt="Spicy Keralam logo"
+              alt={lang === "en" ? "Spicy Keralam logo" : "സ്പൈസി കേരളം ലോഗോ"}
               width={1374}
               height={1145}
               priority
@@ -247,10 +238,10 @@ export default function Hero() {
           <div className="pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-center px-4 text-center sm:top-[9%]">
             <div className="max-w-3xl transition-opacity duration-300">
               <h2 className="font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight text-emerald-600 text-3xl sm:text-5xl lg:text-6xl">
-                {played ? content.end.heading : content.start.heading}
+                {content.start.heading}
               </h2>
               <p className="mt-2 font-mono font-bold uppercase tracking-[0.2em] text-zinc-600 sm:mt-3 text-xs sm:text-base">
-                {played ? content.end.sub : content.start.sub}
+                {content.start.sub}
               </p>
             </div>
           </div>
@@ -272,7 +263,7 @@ export default function Hero() {
             <div className="flex w-full max-w-2xl flex-col items-center justify-end gap-3 sm:gap-4">
               <div className="max-w-2xl transition-opacity duration-300">
                 <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
-                  {played ? content.end.desc : content.start.desc}
+                  {content.start.desc}
                 </p>
               </div>
 

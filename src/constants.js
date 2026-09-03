@@ -5,7 +5,7 @@ export const BRAND = {
 
 export const CONTACT = {
   whatsapp: "+919447282695",
-  phone: "+917356484317",
+  phone: "+919447282695",
   email: "spicykeralamalpy@gmail.com",
 };
 
@@ -37,11 +37,19 @@ export const ITEMS = [
     highlight: "Freshly dried",
   },
   {
-    name: "Nutmeg",
-    nameML: "ജാതിക്ക",
+    name: "Nutmeg maise",
+    nameML: "ജാതിപ്പത്രി",
     image: "/images/nutmeg-maze.jpg",
     width: 1536,
     height: 1024,
+    highlight: "Whole & fragrant",
+  },
+  {
+    name: "Nutmeg",
+    nameML: "ജാതിക്ക",
+    image: "/images/nutmeg.png",
+    width: 600,
+    height: 600,
     highlight: "Whole & fragrant",
   },
   {
@@ -54,7 +62,7 @@ export const ITEMS = [
   },
   {
     name: "Star Anise",
-    nameML: "തകരം",
+    nameML: "തക്കോലം",
     image: "/images/star-annice.jpg",
     width: 1448,
     height: 1086,
@@ -94,7 +102,7 @@ export const GALLERY = [
   gallery("Fresh From Store", "items3"),
   gallery("Kinova Seeds", "kinova-seeds"),
   gallery("Lemongrass Oil", "lemongrass-oil"),
-  gallery("Nutmeg", "nutmeg-maze"),
+  gallery("Nutmeg maise (jaathipathri (malayalam))", "nutmeg-maze"),
   gallery("Sugar-Free Peanut Bites", "peanut-bites-sugar-free"),
   gallery("Pearl Millet", "pearl-millet"),
   gallery("Spice Box", "spice-box"),

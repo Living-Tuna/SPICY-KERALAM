@@ -5,7 +5,7 @@ export const BRAND = {
 
 export const CONTACT = {
   whatsapp: "+919447282695",
-  phone: "+917356484317",
+  phone: "+919447282695",
   email: "spicykeralamalpy@gmail.com",
 };
 
@@ -37,11 +37,19 @@ export const ITEMS = [
     highlight: "പുതുതായി ഉണക്കിയത്",
   },
   {
-    name: "ജാതിക്ക",
-    nameML: "Nutmeg",
+    name: "ജാതിപ്പത്രി",
+    nameML: "Nutmeg maise",
     image: "/images/nutmeg-maze.jpg",
     width: 1536,
     height: 1024,
+    highlight: "മുഴുവനുമായ സുഗന്ധം",
+  },
+  {
+    name: "ജാതിക്ക",
+    nameML: "Nutmeg",
+    image: "/images/nutmeg.png",
+    width: 600,
+    height: 600,
     highlight: "മുഴുവനുമായ സുഗന്ധം",
   },
   {
@@ -53,7 +61,7 @@ export const ITEMS = [
     highlight: "വെയിലിൽ ഉണക്കിയത്, കടുപ്പമേറിയത്",
   },
   {
-    name: "തകരം",
+    name: "തക്കോലം",
     nameML: "Star Anise",
     image: "/images/star-annice.jpg",
     width: 1448,
@@ -94,7 +102,7 @@ export const GALLERY = [
   gallery("സ്റ്റോറിൽ നിന്നുള്ള പുതിയ സ്റ്റോക്ക്", "items3"),
   gallery("കിനോവ വിത്തുകൾ", "kinova-seeds"),
   gallery("ലെമൺഗ്രാസ് ഓയിൽ", "lemongrass-oil"),
-  gallery("ജാതിക്ക", "nutmeg-maze"),
+  gallery("ജാതിപ്പത്രി", "nutmeg-maze"),
   gallery("പഞ്ചസാര രഹിത പീനട്ട് ബൈറ്റ്സ്", "peanut-bites-sugar-free"),
   gallery("കമ്പ് (പേൾ മില്ലറ്റ്)", "pearl-millet"),
   gallery("സ്പൈസ് ബോക്സ്", "spice-box"),
@@ -105,7 +113,7 @@ export const TESTIMONIALS = [
   {
     name: "അശ്വിൻ ആർ",
     rating: 5,
-    text: "കുരുമുളക്, കറുവാപ്പട്ട, തകരം, ഏലം, ഗ്രാമ്പൂ — എല്ലാം പുതിയതും സുഗന്ധമുള്ളതും പ്രീമിയം നിലവാരത്തിലുള്ളതും. ആലപ്പുഴയിലെ മറ്റ് കടകളെ അപേക്ഷിച്ച് വളരെ ന്യായമായ വില.",
+    text: "കുരുമുളക്, കറുവാപ്പട്ട, തക്കോലം, ഏലം, ഗ്രാമ്പൂ — എല്ലാം പുതിയതും സുഗന്ധമുള്ളതും പ്രീമിയം നിലവാരത്തിലുള്ളതും. ആലപ്പുഴയിലെ മറ്റ് കടകളെ അപേക്ഷിച്ച് വളരെ ന്യായമായ വില.",
   },
   {
     name: "മീര എസ്",

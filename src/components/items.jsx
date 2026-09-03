@@ -131,7 +131,7 @@ export default function Items() {
               >
                 <Image
                   src={item.image}
-                  alt={`${item.name} — ${item.highlight}, 100% organic spice from Spicy Keralam, Alappuzha, Kerala`}
+                  alt={`${item.name} — ${item.highlight}, ${lang === "en" ? "100% organic spice from Spicy Keralam, Alappuzha, Kerala" : "100% ഓർഗാനിക് സുഗന്ധദ്രവ്യം, സ്പൈസി കേരളം, ആലപ്പുഴ, കേരളം"}`}
                   width={item.width}
                   height={item.height}
                   className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
@@ -180,7 +180,7 @@ export default function Items() {
           <div className="contact-pop relative z-10 flex w-full max-w-md flex-col items-center gap-4 overflow-visible rounded-3xl bg-white p-7 text-center shadow-2xl sm:p-9">
             <button
               type="button"
-              aria-label="Close"
+              aria-label={lang === "en" ? "Close" : "അടയ്ക്കുക"}
               onClick={close}
               className="absolute -right-2 -top-2 flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-bold text-zinc-500 shadow-md transition-colors hover:bg-zinc-100 hover:text-zinc-800"
             >
@@ -190,6 +190,13 @@ export default function Items() {
             <p className="font-mono text-[10px] uppercase tracking-[0.35em] text-emerald-600">
               {copy.boxLabel}
             </p>
+            <Image
+              src={selected.image}
+              alt={selected.name}
+              width={selected.width}
+              height={selected.height}
+              className="h-40 w-40 rounded-2xl object-cover shadow-lg sm:h-48 sm:w-48"
+            />
             <h3 className="font-[family-name:var(--font-display)] text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-4xl">
               {selected.name}
             </h3>

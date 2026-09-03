@@ -26,8 +26,8 @@ export default function Home() {
         <LazySection>
           <Footer />
         </LazySection>
+        <FloatingContact />
       </LangProvider>
-      <FloatingContact />
     </div>
   );
 }

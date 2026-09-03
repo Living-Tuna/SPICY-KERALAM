@@ -4,8 +4,8 @@ export const siteConfig = {
   url:
     process.env.NEXT_PUBLIC_SITE_URL ??
     "https://spicykeralam.com",
-  phone: "+917356484317",
-  phoneHref: "+917356484317",
+  phone: "+919447282695",
+  phoneHref: "+919447282695",
   whatsapp: "+919447282695",
   email: "spicykeralamalpy@gmail.com",
   address:

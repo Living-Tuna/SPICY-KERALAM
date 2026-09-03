@@ -1,4 +1,7 @@
+"use client";
+
 import { CONTACT } from "@/constants";
+import { useLang } from "@/components/lang-provider";
 
 const WhatsAppIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden>
@@ -19,24 +22,31 @@ const PhoneIcon = () => (
 );
 
 export default function FloatingContact() {
+  const { lang } = useLang();
+
+  const labels =
+    lang === "en"
+      ? { whatsapp: "WhatsApp", email: "Email", call: "Call" }
+      : { whatsapp: "വാട്സ്ആപ്പ്", email: "ഇമെയിൽ", call: "കോൾ" };
+
   const items = [
     {
       key: "whatsapp",
-      label: "WhatsApp",
+      label: labels.whatsapp,
       href: `https://wa.me/${CONTACT.whatsapp}`,
       Icon: WhatsAppIcon,
       external: true,
     },
     {
       key: "mail",
-      label: "Email",
+      label: labels.email,
       href: `mailto:${CONTACT.email}`,
       Icon: MailIcon,
       external: false,
     },
     {
       key: "phone",
-      label: "Call",
+      label: labels.call,
       href: `tel:${CONTACT.phone}`,
       Icon: PhoneIcon,
       external: false,
