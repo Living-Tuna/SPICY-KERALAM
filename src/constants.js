@@ -76,6 +76,22 @@ export const ITEMS = [
     height: 1024,
     highlight: "Sweet & woody",
   },
+  {
+    name: "Marayur Jaggery",
+    nameML: "മരയൂർ ചക്കര",
+    image: "/images/marayur-jaggery.png",
+    width: 800,
+    height: 800,
+    highlight: "Traditional & pure",
+  },
+  {
+    name: "Cinnamon",
+    nameML: "കറുവാപ്പട്ട",
+    image: "/images/cinnamon.png",
+    width: 486,
+    height: 452,
+    highlight: "Rich & aromatic",
+  },
 ];
 
 const GALLERY_DESC =
