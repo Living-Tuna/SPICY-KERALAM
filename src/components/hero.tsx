@@ -234,8 +234,8 @@ export default function Hero() {
           </p>
         </div>
 
-        <div className="relative z-30 flex-1">
-          <div className="pointer-events-none absolute inset-x-0 top-[7%] z-10 flex justify-center px-4 text-center sm:top-[9%]">
+        <div className="relative z-30 flex flex-1 flex-col items-center">
+          <div className="pointer-events-none flex w-full justify-center px-4 pt-[6%] text-center sm:pt-[9%]">
             <div className="max-w-3xl transition-opacity duration-300">
               <h2 className="font-[family-name:var(--font-display)] font-extrabold leading-tight tracking-tight text-emerald-600 text-3xl sm:text-5xl lg:text-6xl">
                 {content.start.heading}
@@ -246,7 +246,50 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-6">
+          <div className="pointer-events-none mt-3 flex w-full justify-center px-4 text-center sm:mt-4">
+            <div className="max-w-2xl transition-opacity duration-300">
+              <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
+                {content.start.desc}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-3 flex flex-col items-center gap-4 sm:mt-4">
+            <button
+              type="button"
+              onClick={() => setContactOpen((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/30 transition-transform hover:scale-105"
+            >
+              {lang === "en" ? "Enquire Now" : "അന്വേഷിക്കുക"}
+              <span
+                aria-hidden
+                className={`transition-transform ${contactOpen ? "rotate-180" : ""}`}
+              >
+                ▾
+              </span>
+            </button>
+            {contactOpen && (
+              <div className="flex items-center justify-center gap-5 sm:gap-7">
+                {contactOptions.map((opt, i) => (
+                  <a
+                    key={opt.key}
+                    href={opt.href}
+                    target={opt.external ? "_blank" : undefined}
+                    rel={opt.external ? "noopener noreferrer" : undefined}
+                    style={{ animationDelay: `${i * 90}ms` }}
+                    className="contact-pop flex flex-col items-center gap-1.5 text-xs font-bold text-zinc-700 transition-colors hover:text-emerald-600 sm:text-sm"
+                  >
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-600">
+                      <opt.Icon />
+                    </span>
+                    {opt.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="pointer-events-none mt-auto flex w-full items-center justify-center px-6 pb-4 sm:pb-5">
             <div className="relative aspect-[16/8.8] w-[min(92vw,880px)] overflow-hidden bg-white sm:w-[min(80vw,950px)]">
               <video
                 ref={videoRef}
@@ -256,51 +299,6 @@ export default function Hero() {
                 playsInline
                 preload="auto"
               />
-            </div>
-          </div>
-
-          <div className="absolute inset-x-0 bottom-0 z-10 flex justify-center px-4 pb-5 text-center sm:pb-6">
-            <div className="flex w-full max-w-2xl flex-col items-center justify-end gap-3 sm:gap-4">
-              <div className="max-w-2xl transition-opacity duration-300">
-                <p className="font-bold leading-relaxed text-zinc-700 text-sm sm:text-lg">
-                  {content.start.desc}
-                </p>
-              </div>
-
-              <div className="flex flex-col items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => setContactOpen((v) => !v)}
-                  className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-600/30 transition-transform hover:scale-105"
-                >
-                  {lang === "en" ? "Enquire Now" : "അന്വേഷിക്കുക"}
-                  <span
-                    aria-hidden
-                    className={`transition-transform ${contactOpen ? "rotate-180" : ""}`}
-                  >
-                    ▾
-                  </span>
-                </button>
-                {contactOpen && (
-                  <div className="flex items-center justify-center gap-5 sm:gap-7">
-                    {contactOptions.map((opt, i) => (
-                      <a
-                        key={opt.key}
-                        href={opt.href}
-                        target={opt.external ? "_blank" : undefined}
-                        rel={opt.external ? "noopener noreferrer" : undefined}
-                        style={{ animationDelay: `${i * 90}ms` }}
-                        className="contact-pop flex flex-col items-center gap-1.5 text-xs font-bold text-zinc-700 transition-colors hover:text-emerald-600 sm:text-sm"
-                      >
-                        <span className="flex h-12 w-12 items-center justify-center rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-600">
-                          <opt.Icon />
-                        </span>
-                        {opt.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>

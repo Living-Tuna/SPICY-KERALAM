@@ -160,20 +160,20 @@ export const TESTIMONIALS = [
 
 export const REVIEWS = [
   {
-    heading: "Our Spicy Box",
-    sub: "100% organic · no artificials · no pesticides",
-    desc: "Fresh, authentic Kerala spices and millets — 100% organic, with no artificials and no pesticides. Straight from our plants to your store.",
-    hashtags: ["#100%Organic", "#NoArtificials", "#NoPesticides", "#PlantsToStore"],
-    button: { label: "Enquire Now", href: "#contact" },
+    heading: "More Than Just Spices",
+    sub: "Millets, honey, seeds & healthy essentials",
+    desc: "From aromatic Kerala spices to nutrient-rich millets, organic honey, chia seeds, coconut sesame balls, lemongrass oil and more — we bring you a complete range of natural, farm-fresh products.",
+    hashtags: ["#Millets", "#OrganicHoney", "#Seeds", "#DryFruits", "#HealthyEssentials"],
+    button: { label: "Explore Our Collection", href: "#gallery" },
   },
   {
-    heading: "Kerala's Aroma, Everywhere",
-    sub: "From Alappuzha to your home",
-    desc: "Authentic spices that capture the true essence of Kerala — premium quality, rich natural flavour, and neatly packed for you.",
+    heading: "Glimpse of Our World",
+    sub: "Fresh from farm to store",
+    desc: "Take a look at what fills our shelves — bamboo rice, finger millet, pearl millet, spice gift boxes, coffee powder and many more natural treasures from Kerala's heartland.",
   },
   {
-    heading: "Shipping All Over India",
-    sub: "Your spicy box, delivered",
-    desc: "We ship our pure, organic spices and millets to every corner of India — freshly packed and delivered with care.",
+    heading: "Pure & Organic, Always",
+    sub: "No artificials · no pesticides · 100% natural",
+    desc: "Every product we offer — whether spices, millets, honey or seeds — is 100% organic, chemical-free and sourced directly from trusted farms across Kerala.",
   },
 ];

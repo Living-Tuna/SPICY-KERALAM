@@ -26,7 +26,7 @@ export default function Gallery() {
         };
 
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section id="gallery" className="bg-white py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.35em] text-emerald-600">

@@ -1,5 +1,6 @@
 import Hero from "@/components/hero";
 import Items from "@/components/items";
+import Reviews from "@/components/reviews";
 import Testimonials from "@/components/testimonials";
 import Gallery from "@/components/gallery";
 import Footer from "@/components/footer";
@@ -16,6 +17,9 @@ export default function Home() {
         <Hero />
         <LazySection>
           <Items />
+        </LazySection>
+        <LazySection>
+          <Reviews />
         </LazySection>
         <LazySection>
           <Gallery />
