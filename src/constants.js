@@ -21,6 +21,7 @@ export const STORE = {
 
 export const ITEMS = [
   {
+    slug: "green-cardamom",
     name: "Green Cardamom",
     nameML: "ഏലം",
     image: "/images/cardamom.jpg",
@@ -29,6 +30,7 @@ export const ITEMS = [
     highlight: "Vibrant & aromatic",
   },
   {
+    slug: "clove",
     name: "Clove",
     nameML: "ഗ്രാമ്പൂ",
     image: "/images/clove.jpg",
@@ -37,6 +39,7 @@ export const ITEMS = [
     highlight: "Freshly dried",
   },
   {
+    slug: "nutmeg-maise",
     name: "Nutmeg maise",
     nameML: "ജാതിപ്പത്രി",
     image: "/images/nutmeg-maze.jpg",
@@ -45,6 +48,7 @@ export const ITEMS = [
     highlight: "Whole & fragrant",
   },
   {
+    slug: "nutmeg",
     name: "Nutmeg",
     nameML: "ജാതിക്ക",
     image: "/images/nutmeg.png",
@@ -53,6 +57,7 @@ export const ITEMS = [
     highlight: "Whole & fragrant",
   },
   {
+    slug: "black-pepper",
     name: "Black Pepper",
     nameML: "കുരുമുളക്",
     image: "/images/pepper.jpg",
@@ -61,6 +66,7 @@ export const ITEMS = [
     highlight: "Sun-dried & pungent",
   },
   {
+    slug: "star-anise",
     name: "Star Anise",
     nameML: "തക്കോലം",
     image: "/images/star-annice.jpg",
@@ -69,6 +75,7 @@ export const ITEMS = [
     highlight: "Premium grade",
   },
   {
+    slug: "cinnamon-stick",
     name: "Cinnamon Stick",
     nameML: "കറുവാപ്പട്ട",
     image: "/images/cinnamon-stick.jpg",
@@ -77,6 +84,7 @@ export const ITEMS = [
     highlight: "Sweet & woody",
   },
   {
+    slug: "marayur-jaggery",
     name: "Marayur Jaggery",
     nameML: "മരയൂർ ചക്കര",
     image: "/images/marayur-jaggery.png",
@@ -85,6 +93,7 @@ export const ITEMS = [
     highlight: "Traditional & pure",
   },
   {
+    slug: "cinnamon",
     name: "Cinnamon",
     nameML: "കറുവാപ്പട്ട",
     image: "/images/cinnamon.png",
@@ -93,6 +102,7 @@ export const ITEMS = [
     highlight: "Rich & aromatic",
   },
   {
+    slug: "saffron",
     name: "Saffron",
     nameML: "കുങ്കുമപ്പൂവ്",
     image: "/images/saffron.png",
@@ -106,6 +116,7 @@ const GALLERY_DESC =
   "Our spices, honey and all our products are our own natural items, sourced directly from farms to our store. Pure, well-packed and stored well.";
 
 const gallery = (name, image) => ({
+  slug: image,
   name,
   image: `/pictures/${image}.jpg`,
   width: 400,

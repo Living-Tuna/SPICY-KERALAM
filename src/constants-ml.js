@@ -21,6 +21,7 @@ export const STORE = {
 
 export const ITEMS = [
   {
+    slug: "green-cardamom",
     name: "ഏലം",
     nameML: "Green Cardamom",
     image: "/images/cardamom.jpg",
@@ -29,6 +30,7 @@ export const ITEMS = [
     highlight: "ഊർജ്ജസ്വലവും സുഗന്ധവും",
   },
   {
+    slug: "clove",
     name: "ഗ്രാമ്പൂ",
     nameML: "Clove",
     image: "/images/clove.jpg",
@@ -37,6 +39,7 @@ export const ITEMS = [
     highlight: "പുതുതായി ഉണക്കിയത്",
   },
   {
+    slug: "nutmeg-maise",
     name: "ജാതിപ്പത്രി",
     nameML: "Nutmeg maise",
     image: "/images/nutmeg-maze.jpg",
@@ -45,6 +48,7 @@ export const ITEMS = [
     highlight: "മുഴുവനുമായ സുഗന്ധം",
   },
   {
+    slug: "nutmeg",
     name: "ജാതിക്ക",
     nameML: "Nutmeg",
     image: "/images/nutmeg.png",
@@ -53,6 +57,7 @@ export const ITEMS = [
     highlight: "മുഴുവനുമായ സുഗന്ധം",
   },
   {
+    slug: "black-pepper",
     name: "കുരുമുളക്",
     nameML: "Black Pepper",
     image: "/images/pepper.jpg",
@@ -61,6 +66,7 @@ export const ITEMS = [
     highlight: "വെയിലിൽ ഉണക്കിയത്, കടുപ്പമേറിയത്",
   },
   {
+    slug: "star-anise",
     name: "തക്കോലം",
     nameML: "Star Anise",
     image: "/images/star-annice.jpg",
@@ -69,6 +75,7 @@ export const ITEMS = [
     highlight: "പ്രീമിയം ഗ്രേഡ്",
   },
   {
+    slug: "cinnamon-stick",
     name: "കറുവാപ്പട്ട",
     nameML: "Cinnamon Stick",
     image: "/images/cinnamon-stick.jpg",
@@ -77,6 +84,7 @@ export const ITEMS = [
     highlight: "മധുരവും സുഗന്ധവും",
   },
   {
+    slug: "marayur-jaggery",
     name: "മരയൂർ ചക്കര",
     nameML: "Marayur Jaggery",
     image: "/images/marayur-jaggery.png",
@@ -85,6 +93,7 @@ export const ITEMS = [
     highlight: "പാരമ്പര്യവും ശുദ്ധവും",
   },
   {
+    slug: "cinnamon",
     name: "കറുവാപ്പട്ട",
     nameML: "Cinnamon",
     image: "/images/cinnamon.png",
@@ -93,6 +102,7 @@ export const ITEMS = [
     highlight: "സുഗന്ധവും രുചികരവും",
   },
   {
+    slug: "saffron",
     name: "കുങ്കുമപ്പൂവ്",
     nameML: "Saffron",
     image: "/images/saffron.png",
@@ -106,6 +116,7 @@ const GALLERY_DESC =
   "ഞങ്ങളുടെ സുഗന്ധവ്യഞ്ജനങ്ങളും തേനും എല്ലാ ഉൽപ്പന്നങ്ങളും സ്വന്തം കർഷകരിൽ നിന്ന് നേരിട്ട് സ്റ്റോറിലേക്ക് എത്തിച്ച സ്വാഭാവിക ഉൽപ്പന്നങ്ങളാണ്. ശുദ്ധമായതും നന്നായി പാക്ക് ചെയ്തതും സൂക്ഷിച്ചതും.";
 
 const gallery = (name, image) => ({
+  slug: image,
   name,
   image: `/pictures/${image}.jpg`,
   width: 400,
