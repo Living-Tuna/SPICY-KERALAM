@@ -92,6 +92,14 @@ export const ITEMS = [
     height: 452,
     highlight: "സുഗന്ധവും രുചികരവും",
   },
+  {
+    name: "കുങ്കുമപ്പൂവ്",
+    nameML: "Saffron",
+    image: "/images/saffron.png",
+    width: 232,
+    height: 253,
+    highlight: "പ്രീമിയം & ശുദ്ധം",
+  },
 ];
 
 const GALLERY_DESC =
