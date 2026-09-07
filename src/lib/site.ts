@@ -3,7 +3,7 @@ export const siteConfig = {
   tagline: "Spices & Millets",
   url:
     process.env.NEXT_PUBLIC_SITE_URL ??
-    "https://spicykeralam.com",
+    "https://spicykeralam.co.in",
   phone: "+919447282695",
   phoneHref: "+919447282695",
   whatsapp: "+919447282695",
