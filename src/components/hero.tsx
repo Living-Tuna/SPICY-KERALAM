@@ -183,7 +183,7 @@ export default function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative flex h-screen w-full flex-col overflow-hidden bg-white"
+      className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-white"
     >
         <header className="relative z-40 grid grid-cols-[1fr_auto_1fr] items-center px-4 pt-4 sm:px-6 sm:pt-5">
           <span />
