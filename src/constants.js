@@ -137,7 +137,7 @@ export const GALLERY = [
   gallery("Fresh From Store", "items3"),
   gallery("Kinova Seeds", "kinova-seeds"),
   gallery("Lemongrass Oil", "lemongrass-oil"),
-  gallery("Star Anise (jaathipathri (malayalam))", "nutmeg-maze"),
+  gallery("Star Anise", "nutmeg-maze"),
   gallery("Sugar-Free Peanut Bites", "peanut-bites-sugar-free"),
   gallery("Pearl Millet", "pearl-millet"),
   gallery("Spice Box", "spice-box"),
