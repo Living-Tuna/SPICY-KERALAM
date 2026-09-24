@@ -80,8 +80,9 @@ export default function Hero() {
     const TRAVEL = 0.55;
     const hero = heroRef.current;
     let raf = 0;
-    let target = -1;
-    let lastSet = -1;
+    let target = 0;
+    let applied = -1;
+    let inFlight = false;
 
     const prime = () => {
       const video = videoRef.current;
@@ -105,6 +106,21 @@ export default function Hero() {
       }
     };
 
+    const seekTo = () => {
+      const video = videoRef.current;
+      if (!video || inFlight || video.readyState < HTMLMediaElement.HAVE_METADATA)
+        return;
+      const next = clamp(target, 0, durationOf());
+      if (Math.abs(next - applied) < 0.0001) return;
+      applied = next;
+      inFlight = true;
+      try {
+        video.currentTime = next;
+      } catch {
+        inFlight = false;
+      }
+    };
+
     const update = () => {
       const vh = window.innerHeight;
       const rect = hero ? hero.getBoundingClientRect() : null;
@@ -114,36 +130,37 @@ export default function Hero() {
       setFill(p);
     };
 
-    const frame = () => {
-      const video = videoRef.current;
-      if (video && Math.abs(target - lastSet) > 0.0001) {
-        lastSet = target;
-        try {
-          video.currentTime = target;
-        } catch {
-          /* noop */
-        }
-      }
-      raf = requestAnimationFrame(frame);
-    };
-
     const onScroll = () => {
       prime();
       update();
+      seekTo();
+    };
+
+    const onSeeked = () => {
+      inFlight = false;
+      seekTo();
+    };
+
+    const frame = () => {
+      seekTo();
+      raf = requestAnimationFrame(frame);
     };
 
     const video = videoRef.current;
     video?.addEventListener("loadeddata", prime, { once: true });
     video?.addEventListener("loadedmetadata", prime, { once: true });
+    video?.addEventListener("seeked", onSeeked);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
     raf = requestAnimationFrame(frame);
     update();
+    seekTo();
 
     return () => {
       video?.removeEventListener("loadeddata", prime);
       video?.removeEventListener("loadedmetadata", prime);
+      video?.removeEventListener("seeked", onSeeked);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
